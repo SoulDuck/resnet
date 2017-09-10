@@ -72,7 +72,7 @@ def train(hps):
 
 
 def eval(hps):
-    images, labels = input.build_input(FLAGS.dataset, FLAGS.train_data_path, hps.batch_size, FLAGS.mode)
+    images, labels = input.build_input(FLAGS.dataset, FLAGS.eval_data_path, hps.batch_size, FLAGS.mode)
     cls_resnet=model.resnet(hps , images , labels , FLAGS.mode) #initialize class resnet
     cls_resnet.build_graph()
     saver = tf.train.Saver()
