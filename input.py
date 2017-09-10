@@ -50,7 +50,7 @@ def build_input(dataset , data_path , batch_size , mode):
             shapes = [[image_size , image_size , depth] , [1]])
         num_threads=16
     else:
-        image = tf.image.crop_and_resize(image , image_size , image_size)
+        image = tf.image.resize_image_with_crop_or_pad(image, image_size, image_size)
         image = tf.image.per_image_standardization(image)
 
         example_queue = tf.FIFOQueue(

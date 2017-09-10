@@ -6,12 +6,14 @@ import six
 import model
 FLAGS=tf.app.flags.FLAGS
 tf.app.flags.DEFINE_string('dataset' , 'cifar10' , 'cifar-10 or cifar-100')
-tf.app.flags.DEFINE_string('mode', 'train','train or eval')
+tf.app.flags.DEFINE_string('mode', 'eval','train or eval')
 tf.app.flags.DEFINE_string('train_data_path','cifar-10/data_batch*','Filepattern for training data')
 tf.app.flags.DEFINE_string('eval_data_path' , '' , 'Filepatter for eval data')
 tf.app.flags.DEFINE_integer('image_size', 32 , 'Image side length')
-tf.app.flags.DEFINE_string('train_dir','./output/train','Directory to kepp training outputs')
-tf.app.flags.DEFINE_string('eval_dir', './output/eval' ,'Directory to keep eval outputs' )
+tf.app.flags.DEFINE_string('train_dir','./output/train','Directory to keep training outputs')
+tf.app.flags.DEFINE_string('eval_dir','./output/eval', 'Directory to keep eval outputs')
+tf.app.flags.DEFINE_integer('eval_batch_count',50,'Number of batches to eval')
+tf.app.flags.DEFINE_string('f', './output/eval' ,'Directory to keep eval outputs' )
 tf.app.flags.DEFINE_bool('eval_once' ,False , 'Whether evaluate the model only once')
 tf.app.flags.DEFINE_string('log_root','./output','Directory to keep the checkpoints. Should be a parent directory of FLAGS.train_dir/eval_dir.')
 tf.app.flags.DEFINE_integer('num_gpus',1, 'Number of gpus used for training. (0 or 1 )')
@@ -69,7 +71,59 @@ def train(hps):
          mon_sess.run(cls_resnet.train_op)
 
 
+def eval(hps):
+    images, labels = input.build_input(FLAGS.dataset, FLAGS.train_data_path, hps.batch_size, FLAGS.mode)
+    cls_resnet=model.resnet(hps , images , labels , FLAGS.mode) #initialize class resnet
+    cls_resnet.build_graph()
+    saver = tf.train.Saver()
+    summary_writer = tf.summary.FileWriter(FLAGS.eval_dir)
 
+    sess = tf.Session(config=tf.ConfigProto(allow_soft_placement=True))
+    tf.train.start_queue_runners(sess)
+
+    best_precision=0.0
+
+    while True:
+        try:
+            ckpt_state = tf.train.get_checkpoint_state(FLAGS.log_root)
+        except tf.errors.OutOfRangeError as e :
+            tf.logging.error('Cannot restore checkpoint : %s' ,e)
+            continue
+        if not ( ckpt_state and ckpt_state.model_checkpoint_path ):
+            tf.logging.error('No model to eval yet at %s' ,FLAGS.log_root)
+            continue
+        tf.logging.info('Loading checkpoint %s' ,ckpt_state.model_checkpoint_path)
+        saver.restore(sess , ckpt_state.model_checkpoint_path)
+
+        total_prediction , correct_prediction = 0,0
+        for _ in six.moves.range(FLAGS.eval_batch_count):
+            (summaries, loss, predictions, truth, train_step) = sess.run(
+                [cls_resnet.summaries, cls_resnet.cost, cls_resnet.predictions,
+                 cls_resnet.label, cls_resnet.global_step])
+            truth = np.argmax(truth , axis =1 )
+            predictions =np.argmax(predictions , axis= 1 )
+            correct_prediction +=np.sum(truth == predictions)
+            total_prediction += predictions.shape[0]
+
+        precision = 1.0*correct_prediction/total_prediction
+        best_precision = max(precision , best_precision)
+
+
+        precision_summ = tf.Summary()
+        precision_summ.value.add(tag='Precision' , simple_value=precision)
+        summary_writer.add_summary(precision_summ , train_step)
+
+        best_precision_summ = tf.Summary()
+        best_precision_summ.value.add(tag='Best Precision' , simple_value='best_precision')
+
+        summary_writer.add_summary(best_precision_summ , train_step)
+        summary_writer.add_summary(summaries ,train_step)
+        tf.logging.info('loss:%.3f , precisions: %.3f , best_precision : %.3f' %(loss ,precision, best_precision))
+        summary_writer.flush()
+
+        if FLAGS.eval_once:
+            break;
+        time.sleep(60)
 
 
 
@@ -106,6 +160,8 @@ def main(_):
     with tf.device(dev):
         if FLAGS.mode == 'train':
             train(hps)
+        elif FLAGS.mode =='eval':
+            eval(hps)
 
         #elif FLAGS.mode == 'eval':
         #    evaluate(hparams)
