@@ -10,10 +10,10 @@ tf.app.flags.DEFINE_string('mode', 'train','train or eval')
 tf.app.flags.DEFINE_string('train_data_path','cifar-10/data_batch*','Filepattern for training data')
 tf.app.flags.DEFINE_string('eval_data_path' , '' , 'Filepatter for eval data')
 tf.app.flags.DEFINE_integer('image_size', 32 , 'Image side length')
-tf.app.flags.DEFINE_string('train_dir','','Directory to kepp training outputs')
-tf.app.flags.DEFINE_string('eval_dir', '' ,'Directory to keep eval outputs' )
+tf.app.flags.DEFINE_string('train_dir','./output/train','Directory to kepp training outputs')
+tf.app.flags.DEFINE_string('eval_dir', './output/eval' ,'Directory to keep eval outputs' )
 tf.app.flags.DEFINE_bool('eval_once' ,False , 'Whether evaluate the model only once')
-tf.app.flags.DEFINE_string('log_root','','Directory to keep the checkpoints. Should be a parent directory of FLAGS.train_dir/eval_dir.')
+tf.app.flags.DEFINE_string('log_root','./output','Directory to keep the checkpoints. Should be a parent directory of FLAGS.train_dir/eval_dir.')
 tf.app.flags.DEFINE_integer('num_gpus',0, 'Number of gpus used for training. (0 or 1 )')
 
 def train(hps):
