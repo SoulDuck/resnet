@@ -14,7 +14,8 @@ tf.app.flags.DEFINE_string('train_dir','./output/train','Directory to kepp train
 tf.app.flags.DEFINE_string('eval_dir', './output/eval' ,'Directory to keep eval outputs' )
 tf.app.flags.DEFINE_bool('eval_once' ,False , 'Whether evaluate the model only once')
 tf.app.flags.DEFINE_string('log_root','./output','Directory to keep the checkpoints. Should be a parent directory of FLAGS.train_dir/eval_dir.')
-tf.app.flags.DEFINE_integer('num_gpus',0, 'Number of gpus used for training. (0 or 1 )')
+tf.app.flags.DEFINE_integer('num_gpus',1, 'Number of gpus used for training. (0 or 1 )')
+
 
 def train(hps):
     """
