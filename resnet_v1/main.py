@@ -11,7 +11,7 @@ dataset='fundus_300x300'
 if dataset == 'cifar10':
     image_size=32
 elif dataset=='fundus_300x300':
-    image_size=300
+    image_size=224
 else:
     raise AssertionError
 
