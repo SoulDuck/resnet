@@ -77,7 +77,7 @@ def build_input(dataset , data_path , batch_size , mode):
     assert labels.get_shape()[0] == batch_size , labels.get_shape()[0]
     assert labels.get_shape()[1] == n_classes  , labels.get_shape()[1]
 
-
+    tf.summary.scalar('labels' , labels)
     tf.summary.image('images' , images )
     return images , labels
 
