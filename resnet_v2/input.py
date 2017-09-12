@@ -2,7 +2,7 @@ import tensorflow as tf
 
 
 def _read_one_example( tfrecord_path , resize=(300,300)):
-    tfrecord_paths=tf.gfile.Glob('./sample_tfrecord/*.tfrecord')
+    tfrecord_paths=tf.gfile.Glob(tfrecord_path)
     print tfrecord_paths
     filename_queue = tf.train.string_input_producer(tfrecord_paths , num_epochs=10)
     reader = tf.TFRecordReader()
@@ -31,7 +31,7 @@ def _read_one_example( tfrecord_path , resize=(300,300)):
                                                target_height=resize_height,
                                                target_width=resize_width)
     #images  = tf.train.shuffle_batch([image ] , batch_size =batch_size  , capacity =30 ,num_threads=3 , min_after_dequeue=10)
-    return image,label,filename
+    return image,label
 
 
 def build_input(dataset , data_path , batch_size , mode):
@@ -50,7 +50,7 @@ def build_input(dataset , data_path , batch_size , mode):
     elif dataset == 'fundus_300x300':
         n_classes =2
         depth =3
-        image_size = 224
+        image_size = 300
     else:
         raise ValueError('Not supported dataset')
 
@@ -76,7 +76,7 @@ def build_input(dataset , data_path , batch_size , mode):
         #Convert from [ch , h , w ] to [h,w,ch]
         image = tf.cast(tf.transpose(depth_major , [1,2,0]) , dtype =  tf.float32)
     elif dataset=='fundus_300x300':
-        image , label  =_read_one_example('./sample_tfrecord/*.record.out', (image_size,image_size))
+        image , label  =_read_one_example('../sample_tfrecord/data_batch*', (image_size,image_size))
 
 
 
@@ -97,7 +97,6 @@ def build_input(dataset , data_path , batch_size , mode):
             dtypes = [tf.float32 , tf.int32],
             shapes = [[image_size , image_size , depth] , [1] ])
         num_threads=16
-        image=image/255.
     else:
         image = tf.image.resize_image_with_crop_or_pad(image, image_size, image_size)
         image = tf.image.per_image_standardization(image)
@@ -108,7 +107,6 @@ def build_input(dataset , data_path , batch_size , mode):
             shapes = [[image_size , image_size , depth] , [1] ,])
 
         num_threads = 1
-        image=image/255.
     label=tf.reshape(label , [1])
     print label
     example_enqueue_op = example_queue.enqueue([image ,label ])
