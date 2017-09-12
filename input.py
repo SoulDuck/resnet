@@ -66,6 +66,7 @@ def build_input(dataset , data_path , batch_size , mode):
     images , labels = example_queue.dequeue_many(batch_size)
     labels = tf.reshape(labels , [batch_size , 1])
     indices = tf.reshape(tf.range(0 , batch_size , 1), [batch_size ,1 ])
+    tf.summary.histogram('labels', labels)
     labels = tf.sparse_to_dense(
         tf.concat(values=[indices , labels] ,axis=1),
         [batch_size , n_classes] , 1.0 , 0.0)
@@ -77,7 +78,7 @@ def build_input(dataset , data_path , batch_size , mode):
     assert labels.get_shape()[0] == batch_size , labels.get_shape()[0]
     assert labels.get_shape()[1] == n_classes  , labels.get_shape()[1]
 
-    tf.summary.histogram('labels' , labels)
+
     tf.summary.image('images' , images )
     return images , labels
 
