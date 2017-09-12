@@ -1,9 +1,13 @@
-import sys ,time , os
+import sys
+import time
+
 import numpy as np
-import input
-import tensorflow as tf
 import six
+import tensorflow as tf
+
+import input
 import model
+
 FLAGS=tf.app.flags.FLAGS
 dataset='cifar10'
 dataset='fundus_300x300'
@@ -35,8 +39,8 @@ def train(hps):
     :return:
     """
     """training loop"""
-    images , labels  = input.build_input(FLAGS.dataset , FLAGS.train_data_path , hps.batch_size , FLAGS.mode)
-    cls_resnet=model.resnet(hps , images , labels , FLAGS.mode) #initialize class resnet
+    images , labels  = input.build_input(FLAGS.dataset, FLAGS.train_data_path, hps.batch_size, FLAGS.mode)
+    cls_resnet= model.resnet(hps, images, labels, FLAGS.mode) #initialize class resnet
     cls_resnet.build_graph()
 
 
@@ -88,7 +92,7 @@ def train(hps):
 
 def eval(hps):
     images, labels = input.build_input(FLAGS.dataset, FLAGS.eval_data_path, hps.batch_size, FLAGS.mode)
-    cls_resnet=model.resnet(hps , images , labels , FLAGS.mode) #initialize class resnet
+    cls_resnet= model.resnet(hps, images, labels, FLAGS.mode) #initialize class resnet
     cls_resnet.build_graph()
     saver = tf.train.Saver()
     summary_writer = tf.summary.FileWriter(FLAGS.eval_dir)
@@ -166,15 +170,15 @@ def main(_):
 
 
 
-    hps=model.HParams(batch_size= batch_size ,
-                     n_classes=n_classes ,
-                     min_lrn_rate=0.0001 ,
-                     lrn_rate=0.1 ,
-                     n_residual_units=5 ,
-                     use_bottleneck=False,
-                     weight_decay_rate=0.0002,
-                     relu_leakiness=0.1,
-                     optimizer='mom')
+    hps= model.HParams(batch_size= batch_size,
+                       n_classes=n_classes,
+                       min_lrn_rate=0.0001,
+                       lrn_rate=0.1,
+                       n_residual_units=5,
+                       use_bottleneck=False,
+                       weight_decay_rate=0.0002,
+                       relu_leakiness=0.1,
+                       optimizer='mom')
     with tf.device(dev):
         if FLAGS.mode == 'train':
             train(hps)
