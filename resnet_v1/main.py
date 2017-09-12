@@ -5,14 +5,21 @@ import tensorflow as tf
 import six
 import model
 FLAGS=tf.app.flags.FLAGS
-dataset='fundus_300x300'
 dataset='cifar10'
+dataset='fundus_300x300'
+
+if dataset == 'cifar10':
+    image_size=32
+elif dataset=='fundus_300x300':
+    image_size=300
+else:
+    raise AssertionError
 
 tf.app.flags.DEFINE_string('dataset' , dataset , 'cifar-10 or cifar-100')
 tf.app.flags.DEFINE_string('mode', 'train','train or eval')
 tf.app.flags.DEFINE_string('train_data_path','../'+dataset+'/data_batch*','Filepattern for training data')
 tf.app.flags.DEFINE_string('eval_data_path' , '../'+dataset+'/test_batch.bin' , 'Filepatter for eval data')
-tf.app.flags.DEFINE_integer('image_size', 32 , 'Image side length')
+tf.app.flags.DEFINE_integer('image_size', image_size , 'Image side length')
 tf.app.flags.DEFINE_string('train_dir','./output/train','Directory to keep training outputs')
 tf.app.flags.DEFINE_string('eval_dir','./output/eval', 'Directory to keep eval outputs')
 tf.app.flags.DEFINE_integer('eval_batch_count',50,'Number of batches to eval')

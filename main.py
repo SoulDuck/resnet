@@ -5,11 +5,21 @@ import tensorflow as tf
 import six
 import model
 FLAGS=tf.app.flags.FLAGS
-tf.app.flags.DEFINE_string('dataset' , 'cifar10' , 'cifar-10 or cifar-100')
+dataset='cifar10'
+dataset='fundus_300x300'
+
+if dataset == 'cifar10':
+    image_size=32
+elif dataset=='fundus_300x300':
+    image_size=300
+else:
+    raise AssertionError
+
+tf.app.flags.DEFINE_string('dataset' , dataset , 'cifar-10 or cifar-100')
 tf.app.flags.DEFINE_string('mode', 'train','train or eval')
-tf.app.flags.DEFINE_string('train_data_path','cifar-10/data_batch*','Filepattern for training data')
-tf.app.flags.DEFINE_string('eval_data_path' , 'cifar-10/test_batch.bin' , 'Filepatter for eval data')
-tf.app.flags.DEFINE_integer('image_size', 32 , 'Image side length')
+tf.app.flags.DEFINE_string('train_data_path','../'+dataset+'/data_batch*','Filepattern for training data')
+tf.app.flags.DEFINE_string('eval_data_path' , '../'+dataset+'/test_batch.bin' , 'Filepatter for eval data')
+tf.app.flags.DEFINE_integer('image_size', image_size , 'Image side length')
 tf.app.flags.DEFINE_string('train_dir','./output/train','Directory to keep training outputs')
 tf.app.flags.DEFINE_string('eval_dir','./output/eval', 'Directory to keep eval outputs')
 tf.app.flags.DEFINE_integer('eval_batch_count',50,'Number of batches to eval')
@@ -25,13 +35,17 @@ def train(hps):
     :return:
     """
     """training loop"""
-    images , labels = input.build_input(FLAGS.dataset , FLAGS.train_data_path , hps.batch_size , FLAGS.mode)
+    images , labels  = input.build_input(FLAGS.dataset , FLAGS.train_data_path , hps.batch_size , FLAGS.mode)
     cls_resnet=model.resnet(hps , images , labels , FLAGS.mode) #initialize class resnet
     cls_resnet.build_graph()
 
+
+
     param_stats = tf.contrib.tfprof.model_analyzer.print_model_analysis(
         tf.get_default_graph(), tfprof_options=tf.contrib.tfprof.model_analyzer.FLOAT_OPS_OPTIONS) #this function for profiling
+    print param_stats.total_parameters
     sys.stdout.write('total_params: %d\n' *param_stats.total_parameters)
+
 
     truth = tf.argmax(cls_resnet.label , axis=1) # onehot --> cls
     predictions = tf.argmax(cls_resnet.predictions , axis=1) #onehot --> cls
@@ -61,6 +75,7 @@ def train(hps):
                 self._lrn_rate = 0.001
             else:
                 self._lrn_rate = 0.0001
+
     with tf.train.MonitoredTrainingSession(
         checkpoint_dir = FLAGS.log_root ,
         hooks=[logging_hook , _LearningRateSetterHook()],
@@ -137,7 +152,7 @@ def main(_):
 
 
     if FLAGS.mode == 'train':
-        batch_size =128
+        batch_size =60
     elif FLAGS.mode =='eval':
         batch_size = 100
 
@@ -146,6 +161,9 @@ def main(_):
         n_classes = 10
     elif FLAGS.dataset == 'cifar100':
         n_classes = 100
+    elif FLAGS.dataset == 'fundus_300x300':
+        n_classes = 2
+
 
 
     hps=model.HParams(batch_size= batch_size ,
