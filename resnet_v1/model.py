@@ -223,14 +223,21 @@ class resnet(object):
         print 'unit_3 end:', x_.get_shape()
         print '----------------------------'
 
+
+        if  self._images.get_shape()[2]==32:
+            unit_4_ch=[128,128,128]
+            stride=1
+        elif self._images.get_shape()[2] == 300:
+            unit_4_ch = [128, 256, 512]
+            stride = 2
         with tf.variable_scope('unit_4'):
-            x_ = res_func(x_ , filters[3] , 128 , self._stride(1) , False)
+            x_ = res_func(x_ , filters[3] , unit_4_ch[0] , self._stride(stride) , False)
             print 'unit_4 end:', x_.get_shape()
         with tf.variable_scope('unit_4_1'):
-            x_ = res_func(x_, 128, 128, self._stride(1), False)
+            x_ = res_func(x_, unit_4_ch[0], unit_4_ch[1], self._stride(stride), False)
             print 'unit_4_1 end:', x_.get_shape()
         with tf.variable_scope('unit_4_2'):
-            x_ = res_func(x_, 128, 128, self._stride(1), False)
+            x_ = res_func(x_, unit_4_ch[1], unit_4_ch[2], self._stride(stride), False)
             print 'unit_4_2 end:', x_.get_shape()
 
         print 'unit_4 end:', x_.get_shape()
