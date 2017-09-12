@@ -227,7 +227,7 @@ class resnet(object):
         if  self._images.get_shape()[2]==32:
             unit_4_ch=[128,128,128]
             stride=1
-        elif self._images.get_shape()[2] == 300:
+        elif self._images.get_shape()[2] == 224:
             unit_4_ch = [128, 256, 512]
             stride = 2
         with tf.variable_scope('unit_4'):
