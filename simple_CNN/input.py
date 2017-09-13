@@ -50,7 +50,7 @@ def build_input(dataset , data_path , batch_size , mode):
     elif dataset == 'fundus_300x300':
         n_classes =2
         depth =3
-        image_size = 224
+        image_size = 300
     else:
         raise ValueError('Not supported dataset')
 
