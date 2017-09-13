@@ -250,73 +250,25 @@ class resnet(object):
 
 
             x_ = self._images
-            x_ = self.
-            x_ = self._conv('init_conv' , x_ , 3 ,3 ,16 , self. _stride(2))
-            print 'init shape',x_.get_shape()
-            x_ = self._stem('stem',x_)
-            print 'stem shape',x_.get_shape()
-            x_ = self._stem_1('stem_1',x_)
-            print 'stem 1 shape',x_.get_shape()
-            x_ = self._stem_2('stem_2',x_)
-            print 'stem 2 shape',x_.get_shape()
+            x_ = self._conv('init_layer' , x_ , 7 , 3 ,32 , self. _stride(2))
+            x_ = self._act(x_)
+            x_ = tf.nn.max_pool(x_ , [1,2,2,1] , self._stride(2) , padding='SAME')
 
+            x_ = self._conv('layer1', x_, 5, 32, 32, self._stride(2))
+            x_ = self._act(x_)
+            x_ = tf.nn.max_pool(x_, [1, 2, 2, 1], self._stride(2), padding='SAME')
 
-            strides = [1, 2, 2]
-            activate_before_residual = [True, False, False]
+            x_ = self._conv('layer2', x_, 3, 32, 64, self._stride(2))
+            x_ = self._act(x_)
+            x_ = tf.nn.max_pool(x_, [1, 2, 2, 1], self._stride(2), padding='SAME')
 
-            if self.hps.use_bottleneck:
-                res_func = self._bottlenect_residual
-                filters= [16, 64,128 ,256]
+            x_ = self._conv('layer3', x_, 3, 64, 64, self._stride(2))
+            x_ = self._act(x_)
+            x_ = tf.nn.max_pool(x_, [1, 2, 2, 1], self._stride(2), padding='SAME')
 
-            else:
-                res_func = self._residual
-                filters = [16,16,32,64]
-
-        x_ = self._conv('1x1_stem', x_, 1, int(x_.get_shape()[3]), filters[0] , self._stride(1), 'SAME' )
-        with tf.variable_scope('unit_1'):
-            x_= res_func(x_,filters[0] , filters[1] ,self._stride(strides[0]) , activate_before_residual[0])
-        for i in six.moves.range(1  , self.hps.n_residual_units):
-
-            with tf.variable_scope('unit_1_%d' % i):
-                x_=res_func(x_ , filters[1] , filters[1] , self. _stride(1) , False)
-        print 'unit_1 end:' ,x_.get_shape()
-        print '----------------------------'
-        with tf.variable_scope('unit_2'):
-            x_ = res_func(x_ , filters[1] , filters[2] , self._stride(strides[1]) ,activate_before_residual[1])
-        print x_.get_shape()
-        for i in six.moves.range(1, self.hps.n_residual_units):
-            with tf.variable_scope('unit_2_%d' % i):
-                x_=res_func(x_, filters[2] , filters[2] ,self._stride(1) , False)
-        print 'unit_2 end:' ,x_.get_shape()
-        print '----------------------------'
-        with tf.variable_scope('unit_3'):
-            x_ = res_func(x_ , filters[2] , filters[3] , self._stride(strides[2]) , activate_before_residual[2])
-        for i in six.moves.range(1, self.hps.n_residual_units):
-            with tf.variable_scope('unit_3_%d' % i):
-                x_=res_func(x_ , filters[3] , filters[3] , self._stride(1) , False)
-        print 'unit_3 end:', x_.get_shape()
-        print '----------------------------'
-
-        """
-        if  self._images.get_shape()[2]==32:
-            unit_4_ch=[128,128,128]
-            stride=1
-        elif self._images.get_shape()[2] == 300:
-            unit_4_ch = [128, 256, 512]
-            stride = 2
-        with tf.variable_scope('unit_4'):
-            x_ = res_func(x_ , filters[3] , unit_4_ch[0] , self._stride(stride) , False)
-            print 'unit_4 end:', x_.get_shape()
-        with tf.variable_scope('unit_4_1'):
-            x_ = res_func(x_, unit_4_ch[0], unit_4_ch[1], self._stride(stride), False)
-            print 'unit_4_1 end:', x_.get_shape()
-        with tf.variable_scope('unit_4_2'):
-            x_ = res_func(x_, unit_4_ch[1], unit_4_ch[2], self._stride(stride), False)
-            print 'unit_4_2 end:', x_.get_shape()
-
-        print 'unit_4 end:', x_.get_shape()
-        print '----------------------------'
-        """
+            x_ = self._conv('layer4', x_, 3, 64, 64, self._stride(2))
+            x_ = self._act(x_)
+            x_ = tf.nn.max_pool(x_, [1, 2, 2, 1], self._stride(2), padding='SAME')
 
         with tf.variable_scope('unit_last'):
             #x_ = res_func(x_, filters[3], filters[3], self._stride(1), False)
