@@ -250,7 +250,7 @@ class resnet(object):
 
 
             x_ = self._images
-            x_ = self._conv('init_layer' , x_ , 7 , 3 ,32 , self. _stride(2))
+            x_ = self._conv('init_layer' , x_ , 7 , 3 ,32 , self._stride(2))
             x_ = self._act(x_)
             x_ = tf.nn.max_pool(x_ , [1,2,2,1] , self._stride(2) , padding='SAME')
 
