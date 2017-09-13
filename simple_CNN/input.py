@@ -4,7 +4,7 @@ import tensorflow as tf
 def _read_one_example( tfrecord_path , resize=(300,300)):
     tfrecord_paths=tf.gfile.Glob(tfrecord_path)
     print tfrecord_paths
-    filename_queue = tf.train.string_input_producer(tfrecord_paths , num_epochs=100000)
+    filename_queue = tf.train.string_input_producer(tfrecord_paths , num_epochs=10)
     reader = tf.TFRecordReader()
     _ , serialized_example = reader.read(filename_queue)
     features = tf.parse_single_example(serialized_example,
@@ -50,7 +50,7 @@ def build_input(dataset , data_path , batch_size , mode):
     elif dataset == 'fundus_300x300':
         n_classes =2
         depth =3
-        image_size = 224
+        image_size = 300
     else:
         raise ValueError('Not supported dataset')
 
@@ -81,8 +81,6 @@ def build_input(dataset , data_path , batch_size , mode):
 
 
     if mode == 'train':
-        image= tf.divide(image , 255 )
-        max_=tf.reduce_max(image)
         image = tf.image.resize_image_with_crop_or_pad(image , image_size+4 , image_size+4)
         image = tf.random_crop(image , [image_size , image_size ,3])
         image = tf.image.random_flip_left_right(image)
@@ -121,7 +119,7 @@ def build_input(dataset , data_path , batch_size , mode):
     indices = tf.reshape(tf.range(0 , batch_size , 1), [batch_size ,1 ])
     images, labels = example_queue.dequeue_many(batch_size)
 
-    tf.summary.scalar('max' , max_)
+
     tf.summary.histogram('labels' , labels)
     labels = tf.sparse_to_dense(
         tf.concat(values=[indices , labels] ,axis=1),
