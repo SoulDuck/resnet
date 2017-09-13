@@ -251,30 +251,36 @@ class resnet(object):
 
             x_ = self._images
             x_ = self._conv('init_layer' , x_ , 7 , 3 ,32 , self._stride(2))
+            print x_.get_shape()
             x_ = self._act(x_)
             x_ = tf.nn.max_pool(x_ , [1,2,2,1] , self._stride(2) , padding='SAME')
-
+            print x_.get_shape()
             x_ = self._conv('layer1', x_, 5, 32, 32, self._stride(2))
+            print x_.get_shape()
             x_ = self._act(x_)
             x_ = tf.nn.max_pool(x_, [1, 2, 2, 1], self._stride(2), padding='SAME')
-
+            print x_.get_shape()
             x_ = self._conv('layer2', x_, 3, 32, 64, self._stride(2))
+            print x_.get_shape()
             x_ = self._act(x_)
             x_ = tf.nn.max_pool(x_, [1, 2, 2, 1], self._stride(2), padding='SAME')
-
+            print x_.get_shape()
             x_ = self._conv('layer3', x_, 3, 64, 64, self._stride(2))
+            print x_.get_shape()
             x_ = self._act(x_)
             x_ = tf.nn.max_pool(x_, [1, 2, 2, 1], self._stride(2), padding='SAME')
-
+            print x_.get_shape()
             x_ = self._conv('layer4', x_, 3, 64, 64, self._stride(2))
+            print x_.get_shape()
             x_ = self._act(x_)
             x_ = tf.nn.max_pool(x_, [1, 2, 2, 1], self._stride(2), padding='SAME')
-
+            print x_.get_shape()
         with tf.variable_scope('unit_last'):
             #x_ = res_func(x_, filters[3], filters[3], self._stride(1), False)
             #x_ = res_func(x_, filters[3], filters[3], self._stride(1), False)
             x_ = self._batch_norm('final_bn' , x_ )
             x_ = self._act(x_ ,actmode='leaky_relu')
+            print x_.get_shape()
             x_ = self._gap(x_)
         print 'unit_last end:', x_.get_shape()
         print '----------------------------'
