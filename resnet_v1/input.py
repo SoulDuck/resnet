@@ -4,7 +4,7 @@ import tensorflow as tf
 def _read_one_example( tfrecord_path , resize=(300,300)):
     tfrecord_paths=tf.gfile.Glob(tfrecord_path)
     print tfrecord_paths
-    filename_queue = tf.train.string_input_producer(tfrecord_paths , num_epochs=10)
+    filename_queue = tf.train.string_input_producer(tfrecord_paths , num_epochs=50000)
     reader = tf.TFRecordReader()
     _ , serialized_example = reader.read(filename_queue)
     features = tf.parse_single_example(serialized_example,
