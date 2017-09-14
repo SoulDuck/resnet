@@ -118,7 +118,7 @@ def train(hps):
 
 
         if i%check_point==0:
-            indices=random.sample(range(len(test_labs) ) hps.batch_size)
+            indices=random.sample(range(len(test_labs) ) , hps.batch_size)
             test_batch_xs=test_imgs[indices]
             test_batch_ys=test_labs[indices]
             print sess.run(precision, feed_dict={x_: test_batch_xs, y_: test_batch_ys})
