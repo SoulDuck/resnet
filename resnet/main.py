@@ -39,7 +39,8 @@ def train(hps):
     :return:
     """
     """training loop"""
-    images , labels  = input.build_input(FLAGS.dataset, FLAGS.train_data_path, hps.batch_size, FLAGS.mode)
+    images , labels  = input.\
+        build_input(FLAGS.dataset, FLAGS.train_data_path, hps.batch_size, FLAGS.mode)
     cls_resnet= model.resnet(hps, images, labels, FLAGS.mode) #initialize class resnet
     cls_resnet.build_graph()
 
