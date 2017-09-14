@@ -112,11 +112,11 @@ def train(hps):
     check_point=100
     msg = '\r Progress {}/{}'.format()
     for i in range(10000):
-        msg = '\r Progress {}/{}'.format(i,10000)
+        msg = '\r Progress {0}/{1}'.format(i,10000)
         sys.stdout.write(msg)
         sys.flush()
 
-        sys.stdout.write()
+
         if i%check_point:
             sess.run(precision, feed_dict={x_: batch_xs, y_: batch_ys})
         sess.run(cls_resnet.train_op, feed_dict={x_: batch_xs, y_: batch_ys})
