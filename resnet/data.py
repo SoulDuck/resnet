@@ -76,6 +76,6 @@ def fundus_np_load(source_folder='../../fundus_data/cropped_original_fundus_300x
     return ret_imgs , ret_labs
     print names
 if '__main__'== __name__:
-    fundus_np_load()
+    fundus_paths2imgs(source_folder='../../fundus_data/cropped_original_fundus_300x300' , normal_offset=15000 )
 
 
