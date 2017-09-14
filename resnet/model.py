@@ -250,7 +250,7 @@ class resnet(object):
 
 
 
-        self.train_op=optimizer.minimize(self.cost)
+        #self.train_op=optimizer.minimize(self.cost)
 
         apply_op = optimizer.apply_gradients(zip(grads , trainable_variable) , name='train_step')
         train_ops = [apply_op] + self._extra_train_ops
