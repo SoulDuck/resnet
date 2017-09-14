@@ -135,7 +135,7 @@ def train(hps):
      while not mon_sess.should_stop():
          mon_sess.run(cls_resnet.train_op)
 
-    """
+"""
 def eval(hps):
     images, labels = input.build_input(FLAGS.dataset, FLAGS.eval_data_path, hps.batch_size, FLAGS.mode)
     cls_resnet= model.resnet(hps, images, labels, FLAGS.mode) #initialize class resnet
@@ -233,5 +233,5 @@ if __name__ == '__main__':
             eval(hps)
         #elif FLAGS.mode == 'eval':
         #    evaluate(hparams)
-#    tf.logging.set_verbosity(tf.logging.INFO)
-#    tf.app.run()
+    #    tf.logging.set_verbosity(tf.logging.INFO)
+    #    tf.app.run()"""
