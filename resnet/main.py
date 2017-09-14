@@ -149,7 +149,7 @@ def train(hps):
             lrn_point = 0.001
         elif i < 5000:
             lrn_point = 0.0001
-        else
+        else:
             lrn_point = 0.0001
         if i%check_point==0:
             imgs_ , labs_ =divide_images_labels_from_batch(test_imgs , test_labs , batch_size)
