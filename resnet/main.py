@@ -109,6 +109,7 @@ def train(hps):
     images  , labels, test_imgs , test_labs, = data.mnist()
     x_ = tf.placeholder(dtype=tf.float32 , shape=[hps.batch_size , image_size, image_size ,depth])
     y_ = tf.placeholder(dtype=tf.int32, shape=[hps.batch_size])
+    lrn_ = tf.placeholder(dtype=tf.int32)
     onehot = tf.one_hot(y_ , depth=hps.n_classes)
 
     cls_resnet= model.resnet(hps, x_, onehot, FLAGS.mode) #initialize class resnet
@@ -142,21 +143,23 @@ def train(hps):
         msg = '\r Progress {0}/{1}'.format(i,10000)
         sys.stdout.write(msg)
         sys.stdout.flush()
-
-
+        if i<1000:
+            lrn_point=0.01
+        elif i<2000:
+            lrn_point = 0.001
+        elif i < 5000:
+            lrn_point = 0.0001
+        else
+            lrn_point = 0.0001
         if i%check_point==0:
             imgs_ , labs_ =divide_images_labels_from_batch(test_imgs , test_labs , batch_size)
             imgs_labs=zip(imgs_ , labs_)
             sum_precision=0
             for i,(xs , ys) in enumerate(imgs_labs):
-                sum_precision+=sess.run(precision, feed_dict={x_: xs, y_: ys})
+                sum_precision+=sess.run(precision, feed_dict={x_: xs, y_: ys , lrn_ :lrn_point })
             print sum_precision/float(i+1)
 
-
-
-
-
-        sess.run(cls_resnet.train_op, feed_dict={x_: batch_xs, y_: batch_ys})
+        sess.run(cls_resnet.train_op, feed_dict={x_: batch_xs, y_: batch_ys , lrn_ : lrn_point})
 
 
     print 'f'
