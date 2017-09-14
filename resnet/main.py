@@ -117,7 +117,7 @@ def train(hps):
         sys.stdout.flush()
 
 
-        if i%check_point:
+        if i%check_point==0:
             print sess.run(precision, feed_dict={x_: batch_xs, y_: batch_ys})
         sess.run(cls_resnet.train_op, feed_dict={x_: batch_xs, y_: batch_ys})
 
