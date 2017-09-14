@@ -192,8 +192,6 @@ def eval(hps):
         time.sleep(60)
 
 
-"""
-
 if __name__ == '__main__':
     if FLAGS.num_gpus==0:
         dev = '/cpu:0'
