@@ -110,7 +110,7 @@ def train(hps):
     batch_xs , batch_ys=next_batch(images , labels , hps.batch_size)
     print 'd'
     check_point=100
-    msg = '\r Progress {}/{}'.format()
+
     for i in range(10000):
         msg = '\r Progress {0}/{1}'.format(i,10000)
         sys.stdout.write(msg)
