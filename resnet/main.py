@@ -98,7 +98,6 @@ def train(hps):
     truth = tf.argmax(cls_resnet.label , axis=1) # onehot --> cls
     predictions = tf.argmax(cls_resnet.predictions , axis=1) #onehot --> cls
     precision = tf.reduce_mean(tf.to_float(tf.equal(predictions , truth))) #mean average
-
     #summary_op = tf.summary.merge([cls_resnet.summaries, tf.summary.scalar('Precision', precision)])
     #tfboard_writer = tf.summary.FileWriter(FLAGS.train_dir)
 
@@ -111,6 +110,10 @@ def train(hps):
     batch_xs , batch_ys=next_batch(images , labels , hps.batch_size)
     print 'd'
     print sess.run(precision , feed_dict = {x_ : batch_xs , y_: batch_ys })
+    for i in range(10000):
+        sess.run(cls_resnet.train_op, feed_dict={x_: batch_xs, y_: batch_ys})
+    print sess.run(precision, feed_dict={x_: batch_xs, y_: batch_ys})
+
     print 'f'
 
 
