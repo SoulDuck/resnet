@@ -181,7 +181,8 @@ class resnet(object):
     def _build_model(self):
         with tf.variable_scope('init'):
             x_ = self._images
-            x_ = self._conv('conv' , x_ , 3 ,3 ,16 , self. _stride(1))
+            in_ch = x_.get_shape()[3]
+            x_ = self._conv('conv' , x_ , 3 ,in_ch ,16 , self. _stride(1))
             strides = [1, 1, 2]
             activate_before_residual = [True, False, False]
 
