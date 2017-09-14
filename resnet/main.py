@@ -8,10 +8,11 @@ import data
 import input
 import model
 
+
 FLAGS=tf.app.flags.FLAGS
 dataset='cifar10'
 dataset='fundus_300x300'
-
+print 'a'
 if dataset == 'cifar10':
     image_size=32
 elif dataset=='fundus_300x300':
