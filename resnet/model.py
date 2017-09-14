@@ -264,7 +264,7 @@ class resnet(object):
         self._build_model()
         if self.mode == 'train':
             self._build_train_op()
-        self.summaries = tf.summary.merge_all()
+        #self.summaries = tf.summary.merge_all()
 
 
 
