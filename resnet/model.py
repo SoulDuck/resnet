@@ -262,7 +262,7 @@ class resnet(object):
         with tf.variable_scope('init'):
             """ in this line , start model"""
         x_ = self._images
-        #self.global_step = tf.contrib.framework.get_or_create_global_step()
+        self.global_step = tf.contrib.framework.get_or_create_global_step()
         self._build_model()
         if self.mode == 'train':
             self._build_train_op()
