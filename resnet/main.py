@@ -227,6 +227,8 @@ if __name__ == '__main__':
         n_classes = 100
     elif FLAGS.dataset == 'fundus_300x300':
         n_classes = 2
+    elif FLAGS.dataset == 'mnist':
+        n_classes = 10
 
 
 
