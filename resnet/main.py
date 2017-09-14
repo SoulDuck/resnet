@@ -89,8 +89,8 @@ def train(hps):
     predictions = tf.argmax(cls_resnet.predictions , axis=1) #onehot --> cls
     precision = tf.reduce_mean(tf.to_float(tf.equal(predictions , truth))) #mean average
 
-    summary_op = tf.summary.merge([cls_resnet.summaries, tf.summary.scalar('Precision', precision)])
-    tfboard_writer = tf.summary.FileWriter(FLAGS.train_dir)
+    #summary_op = tf.summary.merge([cls_resnet.summaries, tf.summary.scalar('Precision', precision)])
+    #tfboard_writer = tf.summary.FileWriter(FLAGS.train_dir)
 
     init= tf.group(tf.global_variables_initializer() , tf.local_variables_initializer())
     print 'a'
