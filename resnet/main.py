@@ -114,7 +114,7 @@ def train(hps):
     for i in range(10000):
         msg = '\r Progress {0}/{1}'.format(i,10000)
         sys.stdout.write(msg)
-        sys.flush()
+        sys.stdout.flush()
 
 
         if i%check_point:
