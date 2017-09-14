@@ -109,10 +109,18 @@ def train(hps):
     print 'c'
     batch_xs , batch_ys=next_batch(images , labels , hps.batch_size)
     print 'd'
-    print sess.run(precision , feed_dict = {x_ : batch_xs , y_: batch_ys })
+    check_point=100
+    msg = '\r Progress {}/{}'.format()
     for i in range(10000):
+        msg = '\r Progress {}/{}'.format(i,10000)
+        sys.stdout.write(msg)
+        sys.flush()
+
+        sys.stdout.write()
+        if i%check_point:
+            sess.run(precision, feed_dict={x_: batch_xs, y_: batch_ys})
         sess.run(cls_resnet.train_op, feed_dict={x_: batch_xs, y_: batch_ys})
-    print sess.run(precision, feed_dict={x_: batch_xs, y_: batch_ys})
+
 
     print 'f'
 
