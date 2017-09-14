@@ -1,10 +1,10 @@
 import sys
 import time
-
+import random
 import numpy as np
 import six
 import tensorflow as tf
-
+import data
 import input
 from resnet import model
 
@@ -30,8 +30,17 @@ tf.app.flags.DEFINE_integer('eval_batch_count',50,'Number of batches to eval')
 tf.app.flags.DEFINE_string('f', './output/eval' ,'Directory to keep eval outputs' )
 tf.app.flags.DEFINE_bool('eval_once' ,False , 'Whether evaluate the model only once')
 tf.app.flags.DEFINE_string('log_root','./output','Directory to keep the checkpoints. Should be a parent directory of FLAGS.train_dir/eval_dir.')
-tf.app.flags.DEFINE_integer('num_gpus',1, 'Number of gpus used for training. (0 or 1 )')
+tf.app.flags.DEFINE_integer('num_gpus',0, 'Number of gpus used for training. (0 or 1 )')
 
+
+def next_batch(imgs, labs, batch_size):
+    indices = random.sample(range(np.shape(imgs)[0]), batch_size)
+    if not type(imgs).__module__ == np.__name__:  # check images type to numpy
+        imgs = np.asarray(imgs)
+    imgs = np.asarray(imgs)
+    batch_xs = imgs[indices]
+    batch_ys = labs[indices]
+    return batch_xs, batch_ys
 
 def train(hps):
     """
@@ -39,34 +48,35 @@ def train(hps):
     :return:
     """
     """training loop"""
-    images , labels  = input.\
-        build_input(FLAGS.dataset, FLAGS.train_data_path, hps.batch_size, FLAGS.mode)
-    cls_resnet= model.resnet(hps, images, labels, FLAGS.mode) #initialize class resnet
+    """
+     self.hps = batch_size= batch_size,
+                n_classes=n_classes,
+                min_lrn_rate=0.0001,
+                lrn_rate=0.1,
+                n_residual_units=5,
+                use_bottleneck=False,
+                weight_decay_rate=0.0002,
+                relu_leakiness=0.1,
+                optimizer='mom')
+     self._images = images
+     self.label = labels
+     self.mode = mode
+     self._extra_train_ops = []
+     self.predictions  = tf.nn.softmax(logits)
+     self.lrn_rate
+     self.train_op
+     self.summaries
+
+     """
+    images , labels=data.fundus_np_load()
+    x_ = tf.placeholder(dtype=tf.float32 , shape=[hps.batch_size , 300, 300 ,3])
+    y_ = tf.placeholder(dtype=tf.int32, shape=[hps.batch_size])
+    onehot = tf.one_hot(y_ , depth=hps.n_classes)
+
+    cls_resnet= model.resnet(hps, x_, onehot, FLAGS.mode) #initialize class resnet
     cls_resnet.build_graph()
-
+    print 'build graph done'
     #cls_resnet class Variable
-    """
-    self.hps = batch_size= batch_size,
-               n_classes=n_classes,
-               min_lrn_rate=0.0001,
-               lrn_rate=0.1,
-               n_residual_units=5,
-               use_bottleneck=False,
-               weight_decay_rate=0.0002,
-               relu_leakiness=0.1,
-               optimizer='mom')
-    self._images = images
-    self.label = labels
-    self.mode = mode
-    self._extra_train_ops = []
-    self.predictions  = tf.nn.softmax(logits)
-    self.lrn_rate
-    self.train_op
-    self.summaries
-    
-    """
-
-
 
     param_stats = tf.contrib.tfprof.model_analyzer.print_model_analysis(
         tf.get_default_graph(), tfprof_options=tf.contrib.tfprof.model_analyzer.FLOAT_OPS_OPTIONS) #this function for profiling
@@ -78,7 +88,18 @@ def train(hps):
     predictions = tf.argmax(cls_resnet.predictions , axis=1) #onehot --> cls
     precision = tf.reduce_mean(tf.to_float(tf.equal(predictions , truth))) #mean average
 
+    summary_op = tf.summary.merge([cls_resnet.summaries, tf.summary.scalar('Precision', precision)])
+    init= tf.group(tf.global_variables_initializer() , tf.local_variables_initializer())
+    sess=tf.Session()
+    sess.run(init)
+    batch_xs , batch_ys=next_batch(images , labels , hps.batch_size)
+    sess.run([summary_op] , feed_dict = {x_ : batch_xs , y_: batch_ys })
 
+
+
+
+
+    """
     summary_hook = tf.train.SummarySaverHook(save_steps=100, output_dir=FLAGS.train_dir,\
                                              summary_op=tf.summary.merge([cls_resnet.summaries, tf.summary.scalar('Precision', precision)]))
 
@@ -112,7 +133,7 @@ def train(hps):
      while not mon_sess.should_stop():
          mon_sess.run(cls_resnet.train_op)
 
-
+    """
 def eval(hps):
     images, labels = input.build_input(FLAGS.dataset, FLAGS.eval_data_path, hps.batch_size, FLAGS.mode)
     cls_resnet= model.resnet(hps, images, labels, FLAGS.mode) #initialize class resnet
@@ -169,7 +190,8 @@ def eval(hps):
 
 
 
-def main(_):
+
+if __name__ == '__main__':
     if FLAGS.num_gpus==0:
         dev = '/cpu:0'
     elif FLAGS.num_gpus==1:
@@ -207,11 +229,7 @@ def main(_):
             train(hps)
         elif FLAGS.mode =='eval':
             eval(hps)
-
         #elif FLAGS.mode == 'eval':
         #    evaluate(hparams)
-
-if __name__ == '__main__':
-    tf.logging.set_verbosity(tf.logging.INFO)
-    tf.app.run()
-
+#    tf.logging.set_verbosity(tf.logging.INFO)
+#    tf.app.run()

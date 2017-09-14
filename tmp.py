@@ -50,5 +50,9 @@ print sess.run(label)
 print sess.run(onehot)
 
 
+for i in range(3):
+    print i
+
+
 
 

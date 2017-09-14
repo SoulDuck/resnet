@@ -181,7 +181,7 @@ class resnet(object):
     def _build_model(self):
         with tf.variable_scope('init'):
             x_ = self._images
-            x_ = self._conv('init_conv' , x_ , 3 ,3 ,16 , self. _stride(1))
+            x_ = self._conv('conv' , x_ , 3 ,3 ,16 , self. _stride(1))
             strides = [1, 1, 2]
             activate_before_residual = [True, False, False]
 
@@ -206,18 +206,18 @@ class resnet(object):
         for i in six.moves.range(1, self.hps.n_residual_units):
             with tf.variable_scope('unit_2_%d' % i):
                 x_=res_func(x_, filters[2] , filters[2] ,self._stride(1) , False)
-
+        print x_.get_shape()
         with tf.variable_scope('unit_3'):
             x_ = res_func(x_ , filters[2] , filters[3] , self._stride(strides[2]) , activate_before_residual[2])
         for i in six.moves.range(1, self.hps.n_residual_units):
             with tf.variable_scope('unit_3_%d' % i):
                 x_=res_func(x_ , filters[3] , filters[3] , self._stride(1) , False)
-
+        print x_.get_shape()
         with tf.variable_scope('unit_last'):
             x_ = self._batch_norm('final_bn' , x_ )
             x_ = self._act(x_ ,actmode='leaky_relu')
             x_ = self._gap(x_)
-
+        print x_.get_shape()
         with tf.variable_scope('logits'):
             logits = self._affine(x_ , self.hps.n_classes)
             self.predictions  = tf.nn.softmax(logits)
@@ -234,6 +234,7 @@ class resnet(object):
 
         :return:
         """
+
         self.lrn_rate =tf.constant(self.hps.lrn_rate , tf.float32)
         tf.summary.scalar('learning_rate', self.lrn_rate )
 

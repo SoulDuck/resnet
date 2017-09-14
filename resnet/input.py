@@ -1,5 +1,14 @@
 import tensorflow as tf
 
+import glob, os, sys
+import numpy as np
+#import utils
+from PIL import Image
+import random
+import matplotlib.pyplot as plt
+from multiprocessing import Pool
+#import aug
+
 
 def _read_one_example( tfrecord_path , resize=(300,300)):
     tfrecord_paths=tf.gfile.Glob(tfrecord_path)
@@ -139,7 +148,6 @@ def build_input(dataset , data_path , batch_size , mode):
     tf.summary.image('images' , images)
     return images , labels
 
-
 if '__main__' == __name__:
 
 
@@ -191,26 +199,3 @@ if '__main__' == __name__:
     sess.close()
 
 
-
-    """
-    #Convert from [ch , h , w ] to [h,w,ch]
-    #image = tf.cast(tf.transpose(depth_major , [1,2,0]) , dtype =  tf.float32)
-    example_queue = tf.FIFOQueue(
-        3*batch_size ,
-        dtypes = [tf.float32 , tf.int32],
-        shapes = [[image_size , image_size , depth] , [1]])
-    num_threads = 1
-    example_enqueue_op = example_queue.enqueue([image ,label])
-    tf.train.add_queue_runner(tf.train.queue_runner.QueueRunner(example_queue , [example_enqueue_op]))
-    images, labels = example_queue.dequeue_many(batch_size)
-    indices = tf.reshape(tf.range(0 , batch_size , 1), [batch_size ,1 ])
-
-    indices = tf.sparse_to_dense(
-        tf.concat(values=[indices , labels] ,axis=1),
-        [batch_size , n_classes] , 1.0 , 0.0 )
-    print record
-    print label
-    print value
-    print image
-    print indices
-    """
