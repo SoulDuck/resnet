@@ -246,11 +246,10 @@ class resnet(object):
         elif self.hps.optimizer=='mom':
             optimizer = tf.train.MomentumOptimizer(self.lrn_rate , 0.9)
 
-            self.train_ops=optimizer.minimize(self.cost)
-            #apply_op = optimizer.apply_gradients(zip(grads , trainable_variable) , global_step=self.global_step , name='train_step')
-        #train_ops = [apply_op] + self._extra_train_ops
 
-        #self.train_op = tf.group(*train_ops)
+        apply_op = optimizer.apply_gradients(zip(grads , trainable_variable) , global_step=self.global_step , name='train_step')
+        train_ops = [apply_op] + self._extra_train_ops
+        self.train_op = tf.group(*train_ops)
 
     def build_graph(self):
         """using thie function you can build more detail model"""

@@ -31,7 +31,7 @@ tf.app.flags.DEFINE_integer('eval_batch_count',50,'Number of batches to eval')
 tf.app.flags.DEFINE_string('f', './output/eval' ,'Directory to keep eval outputs' )
 tf.app.flags.DEFINE_bool('eval_once' ,False , 'Whether evaluate the model only once')
 tf.app.flags.DEFINE_string('log_root','./output','Directory to keep the checkpoints. Should be a parent directory of FLAGS.train_dir/eval_dir.')
-tf.app.flags.DEFINE_integer('num_gpus',0, 'Number of gpus used for training. (0 or 1 )')
+tf.app.flags.DEFINE_integer('num_gpus',1, 'Number of gpus used for training. (0 or 1 )')
 
 
 def next_batch(imgs, labs, batch_size):
@@ -229,7 +229,7 @@ if __name__ == '__main__':
                        use_bottleneck=False,
                        weight_decay_rate=0.0002,
                        relu_leakiness=0.1,
-                       optimizer='sgd')
+                       optimizer='mom')
     with tf.device(dev):
         if FLAGS.mode == 'train':
             train(hps)
