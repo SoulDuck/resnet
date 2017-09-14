@@ -92,7 +92,7 @@ def train(hps):
     summary_op = tf.summary.merge([cls_resnet.summaries, tf.summary.scalar('Precision', precision)])
     tfboard_writer = tf.summary.FileWriter(FLAGS.train_dir)
 
-    init= tf.global_variables_initializer()
+    init= tf.group(tf.global_variables_initializer() , tf.local_variables_initializer())
     print 'a'
     sess=tf.Session()
     print 'b'
