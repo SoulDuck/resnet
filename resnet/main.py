@@ -12,7 +12,7 @@ import model
 FLAGS=tf.app.flags.FLAGS
 dataset='cifar10'
 dataset='fundus_300x300'
-print 'a'
+
 if dataset == 'cifar10':
     image_size=32
 elif dataset=='fundus_300x300':
@@ -192,7 +192,7 @@ def eval(hps):
         time.sleep(60)
 
 
-
+"""
 
 if __name__ == '__main__':
     if FLAGS.num_gpus==0:
@@ -232,7 +232,5 @@ if __name__ == '__main__':
             train(hps)
         elif FLAGS.mode =='eval':
             eval(hps)
-        #elif FLAGS.mode == 'eval':
-        #    evaluate(hparams)
     #    tf.logging.set_verbosity(tf.logging.INFO)
     #    tf.app.run()"""
