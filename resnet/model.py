@@ -7,7 +7,7 @@ https://arxiv.org/pdf/1605.07146v1.pdf
 """
 
 from collections import namedtuple
-import resnet_v0.input
+
 import numpy as np
 import tensorflow as tf
 from tensorflow.python.training import moving_averages
