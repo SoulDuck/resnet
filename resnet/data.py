@@ -2,7 +2,20 @@ import os
 import glob
 import numpy as np
 from PIL import Image
+from tensorflow.examples.tutorials.mnist import input_data
 
+def mnist():
+
+    mnist = input_data.read_data_sets("MNIST_data/", one_hot=True)
+    train_images=mnist.train.images.reshape([-1,28,28,1])
+    test_images = mnist.test.images.reshape([-1, 28, 28, 1])
+
+    print np.shape(train_images)
+    print np.shape(test_images)
+    print np.shape(mnist.train.labels)
+    print np.shape(mnist.test.labels)
+
+    return train_images , mnist.train.labels , test_images , mnist.test.labels
 def path2np(path):
     img=Image.open(path)
     return np.asarray(img)
@@ -75,7 +88,11 @@ def fundus_np_load(source_folder='../../fundus_data/cropped_original_fundus_300x
     print np.shape(ret_labs)
     return ret_imgs , ret_labs
     print names
+
+
+
 if '__main__'== __name__:
-    fundus_paths2imgs(source_folder='../../fundus_data/cropped_original_fundus_300x300' , normal_offset=15000 )
+    mnist()
+    #fundus_paths2imgs(source_folder='../../fundus_data/cropped_original_fundus_300x300' , normal_offset=15000 )
 
 

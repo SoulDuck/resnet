@@ -9,6 +9,7 @@ import input
 import model
 
 
+
 FLAGS=tf.app.flags.FLAGS
 dataset='cifar10'
 dataset='fundus_300x300'
@@ -100,7 +101,7 @@ def train(hps):
     print 'c'
     batch_xs , batch_ys=next_batch(images , labels , hps.batch_size)
     print 'd'
-    print sess.run([precision] , feed_dict = {x_ : batch_xs , y_: batch_ys })
+    print sess.run(precision , feed_dict = {x_ : batch_xs , y_: batch_ys })
     print 'f'
 
 
