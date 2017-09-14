@@ -96,7 +96,7 @@ def train(hps):
     sess=tf.Session()
     sess.run(init)
     batch_xs , batch_ys=next_batch(images , labels , hps.batch_size)
-    sess.run([cls_resnet.train_op] , feed_dict = {x_ : batch_xs , y_: batch_ys })
+    print sess.run([precision] , feed_dict = {x_ : batch_xs , y_: batch_ys })
 
 
 
