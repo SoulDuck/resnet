@@ -93,10 +93,15 @@ def train(hps):
     tfboard_writer = tf.summary.FileWriter(FLAGS.train_dir)
 
     init= tf.group(tf.global_variables_initializer() , tf.local_variables_initializer())
+    print 'a'
     sess=tf.Session()
+    print 'b'
     sess.run(init)
+    print 'c'
     batch_xs , batch_ys=next_batch(images , labels , hps.batch_size)
+    print 'd'
     print sess.run([precision] , feed_dict = {x_ : batch_xs , y_: batch_ys })
+    print 'f'
 
 
 
