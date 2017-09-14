@@ -78,7 +78,8 @@ def train(hps):
 
 
 
-    images , labels=data.fundus_np_load()
+    #images , labels=data.fundus_np_load()
+    train_imgs , train_labs , test_imgs , test_labs, = data.mnist()
     x_ = tf.placeholder(dtype=tf.float32 , shape=[hps.batch_size , image_size, image_size ,depth])
     y_ = tf.placeholder(dtype=tf.int32, shape=[hps.batch_size])
     onehot = tf.one_hot(y_ , depth=hps.n_classes)
