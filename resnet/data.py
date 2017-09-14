@@ -6,7 +6,7 @@ from tensorflow.examples.tutorials.mnist import input_data
 
 def mnist():
 
-    mnist = input_data.read_data_sets("MNIST_data/", one_hot=True)
+    mnist = input_data.read_data_sets("MNIST_data/")
     train_images=mnist.train.images.reshape([-1,28,28,1])
     test_images = mnist.test.images.reshape([-1, 28, 28, 1])
 
