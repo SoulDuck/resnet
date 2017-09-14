@@ -10,6 +10,35 @@ from multiprocessing import Pool
 #import aug
 
 
+
+def divide_images(images , batch_size):
+    debug_flag_lv0=True
+    debug_flag_lv1=True
+    if __debug__ == debug_flag_lv0:
+        print 'debug start | utils.py | divide_images'
+    batch_img_list = []
+    share = len(images) / batch_size
+    # print len(images)
+    # print len(labels)
+    # print 'share :',share
+
+    for i in range(share + 1):
+        if i == share:
+            imgs = images[i * batch_size:]
+            # print i+1, len(imgs), len(labs)
+            batch_img_list.append(imgs)
+            if __debug__ == debug_flag_lv1:
+                print "######utils.py: divide_images_from_batch debug mode#####"
+                print 'total :', len(images), 'batch', i * batch_size, '-', len(images)
+        else:
+            imgs = images[i * batch_size:(i + 1) * batch_size]
+            # print i , len(imgs) , len(labs)
+            batch_img_list.append(imgs)
+            if __debug__ == debug_flag_lv1:
+                print "######utils.py: divide_images_from_batch debug mode######"
+                print 'total :', len(images), 'batch', i * batch_size, ":", (i + 1) * batch_size
+    return batch_img_list
+
 def _read_one_example( tfrecord_path , resize=(300,300)):
     tfrecord_paths=tf.gfile.Glob(tfrecord_path)
     print tfrecord_paths

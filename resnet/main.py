@@ -7,9 +7,36 @@ import tensorflow as tf
 import data
 import input
 import model
+def divide_images_labels_from_batch(images, labels ,batch_size):
+    debug_flag=True
 
+    batch_img_list=[]
+    batch_lab_list = []
+    share=len(labels)/batch_size
+    #print len(images)
+    #print len(labels)
+    #print 'share :',share
 
-
+    for i in range(share+1):
+        if i==share:
+            imgs = images[-batch_size:]
+            labs = labels[-batch_size:]
+            #print i+1, len(imgs), len(labs)
+            batch_img_list.append(imgs)
+            batch_lab_list.append(labs)
+            if __debug__ ==debug_flag:
+                print "######utils.py: divide_images_labels_from_batch debug mode#####"
+                print 'total :', len(images), 'batch', i*batch_size ,'-',len(images)
+        else:
+            imgs=images[i*batch_size:(i+1)*batch_size]
+            labs=labels[i * batch_size:(i + 1) * batch_size]
+           # print i , len(imgs) , len(labs)
+            batch_img_list.append(imgs)
+            batch_lab_list.append(labs)
+            if __debug__ == debug_flag:
+                print "######utils.py: divide_images_labels_from_batch debug mode######"
+                print 'total :', len(images) ,'batch' ,i*batch_size ,":",(i+1)*batch_size
+    return batch_img_list , batch_lab_list
 FLAGS=tf.app.flags.FLAGS
 dataset='cifar10'
 
@@ -118,10 +145,17 @@ def train(hps):
 
 
         if i%check_point==0:
-            indices=random.sample(range(len(test_labs) ) , hps.batch_size)
-            test_batch_xs=test_imgs[indices]
-            test_batch_ys=test_labs[indices]
-            print sess.run(precision, feed_dict={x_: test_batch_xs, y_: test_batch_ys})
+            imgs_ , labs_ =divide_images_labels_from_batch(test_imgs , test_labs , batch_size)
+            imgs_labs=zip(imgs_ , labs_)
+            sum_precision=0
+            for i,(xs , ys) in enumerate(imgs_labs):
+                sum_precision+=sess.run(precision, feed_dict={x_: xs, y_: ys})
+            print sum_precision/float(i+1)
+
+
+
+
+
         sess.run(cls_resnet.train_op, feed_dict={x_: batch_xs, y_: batch_ys})
 
 
