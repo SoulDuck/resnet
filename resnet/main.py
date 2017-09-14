@@ -101,7 +101,7 @@ def train(hps):
 
 
 
-
+    """
 
     summary_hook = tf.train.SummarySaverHook(save_steps=100, output_dir=FLAGS.train_dir,\
                                              summary_op=tf.summary.merge([cls_resnet.summaries, tf.summary.scalar('Precision', precision)]))
@@ -136,7 +136,7 @@ def train(hps):
      while not mon_sess.should_stop():
          mon_sess.run(cls_resnet.train_op)
 
-"""
+    """
 def eval(hps):
     images, labels = input.build_input(FLAGS.dataset, FLAGS.eval_data_path, hps.batch_size, FLAGS.mode)
     cls_resnet= model.resnet(hps, images, labels, FLAGS.mode) #initialize class resnet
