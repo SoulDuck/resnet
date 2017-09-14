@@ -89,17 +89,19 @@ def train(hps):
     precision = tf.reduce_mean(tf.to_float(tf.equal(predictions , truth))) #mean average
 
     summary_op = tf.summary.merge([cls_resnet.summaries, tf.summary.scalar('Precision', precision)])
+    tfboard_writer = tf.summary.FileWriter(FLAGS.summaries_dir + '/'+hps.mode)
+
     init= tf.group(tf.global_variables_initializer() , tf.local_variables_initializer())
     sess=tf.Session()
     sess.run(init)
     batch_xs , batch_ys=next_batch(images , labels , hps.batch_size)
-    sess.run([summary_op] , feed_dict = {x_ : batch_xs , y_: batch_ys })
+    sess.run([cls_resnet.train_op] , feed_dict = {x_ : batch_xs , y_: batch_ys })
 
 
 
 
 
-    """
+
     summary_hook = tf.train.SummarySaverHook(save_steps=100, output_dir=FLAGS.train_dir,\
                                              summary_op=tf.summary.merge([cls_resnet.summaries, tf.summary.scalar('Precision', precision)]))
 
