@@ -226,7 +226,7 @@ class resnet(object):
             self.cost = tf.reduce_mean(xent,name='xent')
             self.cost += self._decay()
 
-            tf.summary.scalar('cost',self.cost)
+        tf.summary.scalar('cost',self.cost)
 
 
     def _build_train_op(self):
