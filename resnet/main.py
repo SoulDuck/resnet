@@ -12,16 +12,22 @@ import model
 
 FLAGS=tf.app.flags.FLAGS
 dataset='cifar10'
-dataset='fundus_300x300'
 
+dataset='fundus_300x300'
+dataset='mnist'
 if dataset == 'cifar10':
     image_size=32
+    depth=3
 elif dataset=='fundus_300x300':
     image_size=300
+    depth=3
+elif dataset=='mnist':
+    image_size=28
+    depth=1
 else:
     raise AssertionError
 
-tf.app.flags.DEFINE_string('dataset' , dataset , 'cifar-10 or cifar-100')
+tf.app.flags.DEFINE_string('dataset' , dataset , 'cifar-10 or cifar-100 or mnist or fundus_300x300' )
 tf.app.flags.DEFINE_string('mode', 'train','train or eval')
 tf.app.flags.DEFINE_string('train_data_path','../'+dataset+'/data_batch*','Filepattern for training data')
 tf.app.flags.DEFINE_string('eval_data_path' , '../'+dataset+'/test_batch.bin' , 'Filepatter for eval data')
@@ -68,10 +74,12 @@ def train(hps):
      self.lrn_rate
      self.train_op
      self.summaries
-
      """
+
+
+
     images , labels=data.fundus_np_load()
-    x_ = tf.placeholder(dtype=tf.float32 , shape=[hps.batch_size , 300, 300 ,3])
+    x_ = tf.placeholder(dtype=tf.float32 , shape=[hps.batch_size , image_size, image_size ,depth])
     y_ = tf.placeholder(dtype=tf.int32, shape=[hps.batch_size])
     onehot = tf.one_hot(y_ , depth=hps.n_classes)
 
