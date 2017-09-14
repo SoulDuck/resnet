@@ -255,7 +255,7 @@ if __name__ == '__main__':
                        use_bottleneck=False,
                        weight_decay_rate=0.0002,
                        relu_leakiness=0.1,
-                       optimizer='mom')
+                       optimizer='sgd')
     with tf.device(dev):
         if FLAGS.mode == 'train':
             train(hps)
