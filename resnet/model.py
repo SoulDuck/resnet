@@ -252,7 +252,7 @@ class resnet(object):
 
         self.train_op=optimizer.minimize(self.cost)
 
-        apply_op = optimizer.apply_gradients(zip(grads , trainable_variable) , global_step=self.global_step , name='train_step')
+        apply_op = optimizer.apply_gradients(zip(grads , trainable_variable) , name='train_step')
         train_ops = [apply_op] + self._extra_train_ops
         self.train_op = tf.group(*train_ops)
 
