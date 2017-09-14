@@ -118,8 +118,10 @@ def train(hps):
 
 
         if i%check_point==0:
-            print ''
-            print sess.run(precision, feed_dict={x_: batch_xs, y_: batch_ys})
+            indices=random.sample(range(len(test_labs) , 60))
+            test_batch_xs=test_imgs[indices]
+            test_batch_ys=test_labs[indices]
+            print sess.run(precision, feed_dict={x_: test_batch_xs, y_: test_batch_ys})
         sess.run(cls_resnet.train_op, feed_dict={x_: batch_xs, y_: batch_ys})
 
 
