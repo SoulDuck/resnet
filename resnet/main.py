@@ -44,6 +44,28 @@ def train(hps):
     cls_resnet= model.resnet(hps, images, labels, FLAGS.mode) #initialize class resnet
     cls_resnet.build_graph()
 
+    #cls_resnet class Variable
+    """
+    self.hps = batch_size= batch_size,
+               n_classes=n_classes,
+               min_lrn_rate=0.0001,
+               lrn_rate=0.1,
+               n_residual_units=5,
+               use_bottleneck=False,
+               weight_decay_rate=0.0002,
+               relu_leakiness=0.1,
+               optimizer='mom')
+    self._images = images
+    self.label = labels
+    self.mode = mode
+    self._extra_train_ops = []
+    self.predictions  = tf.nn.softmax(logits)
+    self.lrn_rate
+    self.train_op
+    self.summaries
+    
+    """
+
 
 
     param_stats = tf.contrib.tfprof.model_analyzer.print_model_analysis(
