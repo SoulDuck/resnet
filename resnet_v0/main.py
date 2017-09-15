@@ -6,7 +6,7 @@ import six
 import tensorflow as tf
 
 import input
-from resnet import model
+
 
 FLAGS=tf.app.flags.FLAGS
 dataset='cifar10'
