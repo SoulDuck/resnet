@@ -156,7 +156,7 @@ def main(_):
 
 
     if FLAGS.mode == 'train':
-        batch_size =60
+        batch_size =120
     elif FLAGS.mode =='eval':
         batch_size = 100
 
@@ -191,4 +191,5 @@ def main(_):
 if __name__ == '__main__':
     tf.logging.set_verbosity(tf.logging.INFO)
     tf.app.run()
+
 
