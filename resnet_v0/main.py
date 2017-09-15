@@ -4,7 +4,7 @@ import time
 import numpy as np
 import six
 import tensorflow as tf
-
+import model
 import input
 
 
