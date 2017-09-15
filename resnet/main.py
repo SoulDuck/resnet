@@ -40,8 +40,8 @@ def divide_images_labels_from_batch(images, labels ,batch_size):
 FLAGS=tf.app.flags.FLAGS
 dataset='cifar10'
 
-dataset='fundus_300x300'
-dataset='mnist'
+#dataset='fundus_300x300'
+#dataset='mnist'
 if dataset == 'cifar10':
     image_size=32
     depth=3

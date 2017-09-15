@@ -10,7 +10,7 @@ from resnet import model
 
 FLAGS=tf.app.flags.FLAGS
 dataset='cifar10'
-dataset='fundus_300x300'
+#dataset='fundus_300x300'
 
 if dataset == 'cifar10':
     image_size=32
