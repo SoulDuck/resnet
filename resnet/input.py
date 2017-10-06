@@ -69,7 +69,7 @@ def _read_one_example( tfrecord_path , resize=(300,300)):
                                                target_height=resize_height,
                                                target_width=resize_width)
     #images  = tf.train.shuffle_batch([image ] , batch_size =batch_size  , capacity =30 ,num_threads=3 , min_after_dequeue=10)
-    return image,label
+    return image,label , filename
 
 
 def build_input(dataset , data_path , batch_size , mode):

@@ -72,7 +72,7 @@ def build_input(dataset , data_path , batch_size , mode):
 
         #Convert from string to [depth * height * width ] to [depth , height , width]
         depth_major = tf.reshape(tf.slice(record , [label_offset + label_bytes] , [image_bytes]) , [depth , image_size , image_size])
-
+        print depth_major
         #Convert from [ch , h , w ] to [h,w,ch]
         image = tf.cast(tf.transpose(depth_major , [1,2,0]) , dtype =  tf.float32)
     elif dataset=='fundus_300x300':
