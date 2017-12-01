@@ -10,6 +10,7 @@ import input
 
 FLAGS=tf.app.flags.FLAGS
 dataset='cifar10'
+
 #dataset='fundus_300x300'
 
 if dataset == 'cifar10':

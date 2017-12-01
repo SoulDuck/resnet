@@ -100,6 +100,8 @@ def build_input(dataset , data_path , batch_size , mode):
             shapes = [[image_size , image_size , depth] , [1] ])
         num_threads=16
     else:
+        image = tf.divide(image, 255)
+        max_ = tf.reduce_max(image)
         image = tf.image.resize_image_with_crop_or_pad(image, image_size, image_size)
         image = tf.image.per_image_standardization(image)
 
@@ -119,8 +121,6 @@ def build_input(dataset , data_path , batch_size , mode):
     images , labels  = example_queue.dequeue_many(batch_size)
     labels = tf.reshape(labels , [batch_size , 1])
     indices = tf.reshape(tf.range(0 , batch_size , 1), [batch_size ,1 ])
-    images, labels = example_queue.dequeue_many(batch_size)
-
     tf.summary.scalar('max' , max_)
     tf.summary.histogram('labels' , labels)
     labels = tf.sparse_to_dense(

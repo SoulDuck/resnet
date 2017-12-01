@@ -40,6 +40,7 @@ def divide_images_labels_from_batch(images, labels ,batch_size):
 FLAGS=tf.app.flags.FLAGS
 dataset='cifar10'
 
+
 #dataset='fundus_300x300'
 #dataset='mnist'
 if dataset == 'cifar10':
@@ -66,6 +67,9 @@ tf.app.flags.DEFINE_string('f', './output/eval' ,'Directory to keep eval outputs
 tf.app.flags.DEFINE_bool('eval_once' ,False , 'Whether evaluate the model only once')
 tf.app.flags.DEFINE_string('log_root','./output','Directory to keep the checkpoints. Should be a parent directory of FLAGS.train_dir/eval_dir.')
 tf.app.flags.DEFINE_integer('num_gpus',1, 'Number of gpus used for training. (0 or 1 )')
+
+
+
 
 
 def next_batch(imgs, labs, batch_size):

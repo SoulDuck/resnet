@@ -157,7 +157,7 @@ def build_input(dataset , data_path , batch_size , mode):
     images , labels  = example_queue.dequeue_many(batch_size)
     labels = tf.reshape(labels , [batch_size , 1])
     indices = tf.reshape(tf.range(0 , batch_size , 1), [batch_size ,1 ])
-    images, labels = example_queue.dequeue_many(batch_size)
+
 
     tf.summary.scalar('max' , max_)
     tf.summary.histogram('labels' , labels)
