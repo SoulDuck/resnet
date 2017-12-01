@@ -62,7 +62,7 @@ def train(hps):
 
     class _LearningRateSetterHook(tf.train.SessionRunHook):
         def begin(self):
-            self._lrn_rate = 0.001
+            self._lrn_rate = 0.01
         def before_run(self, run_context):
             return tf.train.SessionRunArgs(cls_resnet.global_step , feed_dict={cls_resnet.lrn_rate : self._lrn_rate})
         def after_run(self , run_context , run_values):
@@ -138,7 +138,7 @@ def eval(hps):
 
         if FLAGS.eval_once:
             break;
-        time.sleep(60)
+
 
 
 
